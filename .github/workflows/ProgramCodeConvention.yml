@@ -16,4 +16,5 @@ jobs:
         run: npm install --save-dev --save-exact @biomejs/biome
 
       - name: Run Linter on ProgramCode.js
-        run: npx @biomejs/biome check SoftwareProductDevelopment/2-SoftwareDesign/2.6-GitHubActions/ProgramCode.js
+        run: npx @biomejs/biome check ProgramCode.js
+
