@@ -1,63 +1,80 @@
-CREATE TABLE user_data (
+-- Таблиця Користувач
+CREATE TABLE Користувач (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    full_name VARCHAR(100) NOT NULL,
-    user_age INT CHECK (user_age > 0),
-    allergies TEXT,
-    goal VARCHAR(100)
+    ім’я VARCHAR(100) NOT NULL,
+    вік INT CHECK (вік > 0),
+    алергії TEXT,
+    ціль VARCHAR(100)
 );
 
-CREATE TABLE health_data (
+-- Таблиця ДаніПроЗдоров’я
+CREATE TABLE ДаніПроЗдоров’я (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    weight FLOAT CHECK (weight > 0),
-    height INT CHECK (height > 0),
-    bmi FLOAT,
-    activity_level VARCHAR(100),
-    diet_restrictions TEXT,
-    FOREIGN KEY (user_id) REFERENCES user_data (id)
+    користувач_id INT,
+    вага FLOAT CHECK (вага > 0),
+    зріст INT CHECK (зріст > 0),
+    індекс_маси_тіла FLOAT,
+    рівень_активності VARCHAR(100),
+    дієтичні_обмеження TEXT,
+    FOREIGN KEY (користувач_id) REFERENCES Користувач(id)
 );
 
-CREATE TABLE meal_plan (
+-- Таблиця ПланХарчування
+CREATE TABLE ПланХарчування (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    breakfast TEXT,
-    lunch TEXT,
-    dinner TEXT,
-    calories INT CHECK (calories > 0),
-    FOREIGN KEY (user_id) REFERENCES user_data (id)
+    користувач_id INT,
+    сніданок TEXT,
+    обід TEXT,
+    вечеря TEXT,
+    калорійність INT CHECK (калорійність > 0),
+    FOREIGN KEY (користувач_id) REFERENCES Користувач(id)
 );
 
-CREATE TABLE recommendations (
+-- Таблиця Рекомендації
+CREATE TABLE Рекомендації (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    plan_id INT,
-    daily_water FLOAT CHECK (daily_water > 0),
-    physical_activity VARCHAR(100),
-    FOREIGN KEY (plan_id) REFERENCES meal_plan (id)
+    план_id INT,
+    обсяг_води_на_день FLOAT CHECK (обсяг_води_на_день > 0),
+    фізична_активність VARCHAR(100),
+    FOREIGN KEY (план_id) REFERENCES ПланХарчування(id)
 );
 
-CREATE TABLE achievements (
+-- Таблиця Досягнення
+CREATE TABLE Досягнення (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    workouts_count INT CHECK (workouts_count >= 0),
-    exercises_done TEXT,
-    awards TEXT,
-    FOREIGN KEY (user_id) REFERENCES user_data (id)
+    користувач_id INT,
+    кількість_тренувань INT CHECK (кількість_тренувань >= 0),
+    виконані_вправи TEXT,
+    нагороди TEXT,
+    FOREIGN KEY (користувач_id) REFERENCES Користувач(id)
 );
 
-CREATE TABLE self_esteem (
+-- Таблиця Самоповага
+CREATE TABLE Самоповага (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    esteem_level FLOAT CHECK (esteem_level BETWEEN 0 AND 10),
-    confidence VARCHAR(100),
-    FOREIGN KEY (user_id) REFERENCES user_data (id)
+    користувач_id INT,
+    рівень FLOAT CHECK (рівень BETWEEN 0 AND 10),
+    впевненість VARCHAR(100),
+    FOREIGN KEY (користувач_id) REFERENCES Користувач(id)
 );
 
-CREATE TABLE dance_events (
+-- Таблиця ТанцювальніПодії
+CREATE TABLE ТанцювальніПодії (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    event_title VARCHAR(100),
-    dance_type VARCHAR(100),
-    event_date DATE,
-    event_location VARCHAR(100),
-    FOREIGN KEY (user_id) REFERENCES user_data (id)
+    користувач_id INT,
+    назва VARCHAR(100),
+    тип_танцю VARCHAR(100),
+    дата_проведення DATE,
+    місце_проведення VARCHAR(100),
+    FOREIGN KEY (користувач_id) REFERENCES Користувач(id)
 );
+
+-- Обмеження з регулярними виразами
+
+-- Ім’я: тільки літери, пробіли, дефіси
+ALTER TABLE Користувач ADD CONSTRAINT name_format
+CHECK (ім’я REGEXP '^[А-Яа-яІіЇїЄєҐґ\\- ]+$');
+
+-- Ціль: тільки українські слова, без цифр
+ALTER TABLE Користувач ADD CONSTRAINT goal_format
+CHECK (ціль REGEXP '^[А-Яа-яІіЇїЄєҐґ ]+$');
